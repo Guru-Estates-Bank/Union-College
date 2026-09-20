@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import {
   motion,
   AnimatePresence,
@@ -30,6 +32,7 @@ import {
   Star,
   ShieldCheck,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 /* ============================================================
    UNION COLLEGE — HOME PAGE
@@ -321,100 +324,7 @@ export default function Home() {
           NAVBAR
       ====================================================== */}
 
-      <header className="fixed left-0 right-0 top-0 z-50 px-4 pt-4 md:px-8">
-        <motion.nav
-          initial={{ y: -30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.7 }}
-          className="mx-auto flex max-w-7xl items-center justify-between rounded-2xl border border-white/40 bg-white/90 px-4 py-3 shadow-xl shadow-[#082744]/5 backdrop-blur-xl md:px-6"
-        >
-          {/* Logo */}
-
-          <button
-            onClick={() => scrollToSection("top")}
-            className="flex items-center gap-3"
-          >
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#082744] text-[#B68A3A]">
-              <GraduationCap size={21} />
-            </div>
-
-            <div className="text-left">
-              <div className="font-serif text-lg font-bold leading-none text-[#082744]">
-                Union
-              </div>
-
-              <div className="mt-1 text-[9px] font-semibold uppercase tracking-[0.25em] text-[#B68A3A]">
-                College
-              </div>
-            </div>
-          </button>
-
-          {/* Desktop navigation */}
-
-          <div className="hidden items-center gap-7 lg:flex">
-            {[
-              ["Programmes", "programmes"],
-              ["Institutions", "institutions"],
-              ["Why Union", "why-union"],
-              ["How It Works", "how-it-works"],
-            ].map(([label, id]) => (
-              <button
-                key={id}
-                onClick={() => scrollToSection(id)}
-                className="text-sm font-medium text-[#082744]/70 transition hover:text-[#082744]"
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-
-          <div className="hidden lg:block">
-            <a
-              href="https://wa.me/919088966666"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <GoldButton>Talk to an Advisor</GoldButton>
-            </a>
-          </div>
-
-          {/* Mobile menu */}
-
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#082744] text-white lg:hidden"
-          >
-            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </motion.nav>
-
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="mx-4 mt-2 rounded-2xl border border-white/50 bg-white p-4 shadow-2xl lg:hidden"
-            >
-              {[
-                ["Programmes", "programmes"],
-                ["Institutions", "institutions"],
-                ["Why Union", "why-union"],
-                ["How It Works", "how-it-works"],
-                ["Talk to an Advisor", "advisor"],
-              ].map(([label, id]) => (
-                <button
-                  key={id}
-                  onClick={() => scrollToSection(id)}
-                  className="block w-full rounded-xl px-4 py-3 text-left text-sm font-medium text-[#082744] hover:bg-[#F8F6F0]"
-                >
-                  {label}
-                </button>
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </header>
+      <Navbar></Navbar>
 
       {/* ======================================================
           HERO
@@ -514,8 +424,8 @@ export default function Home() {
                   Explore Programmes
                 </GoldButton>
 
-                <OutlineButton dark onClick={() => scrollToSection("advisor")}>
-                  Talk to an Advisor
+                <OutlineButton dark>
+                  <Link to="contact">Talk to an Advisor</Link>
                 </OutlineButton>
               </motion.div>
 
@@ -1072,9 +982,7 @@ export default function Home() {
                       {institution.category}
                     </span>
 
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#082744] transition group-hover:bg-[#B68A3A] group-hover:text-white">
-                      <ArrowUpRight size={17} />
-                    </div>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#082744] transition group-hover:bg-[#B68A3A] group-hover:text-white"></div>
                   </div>
 
                   <h3 className="text-2xl font-semibold text-white">
@@ -1357,7 +1265,9 @@ export default function Home() {
             </p>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <GoldButton>Talk to an Advisor</GoldButton>
+              <Link to="/contact">
+                <GoldButton>Talk to an Advisor</GoldButton>
+              </Link>
 
               <OutlineButton dark>Explore Programmes</OutlineButton>
             </div>
@@ -1366,218 +1276,8 @@ export default function Home() {
       </section>
 
       {/* ======================================================
-          FOOTER
-      ====================================================== */}
-
-      <footer className="border-t border-[#082744]/10 bg-white px-6 py-14 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_.7fr_.7fr_.7fr]">
-            {/* Brand */}
-
-            <div>
-              <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#082744] text-[#D2A755]">
-                  <GraduationCap size={22} />
-                </div>
-
-                <div>
-                  <div className="font-serif text-xl font-bold">Union</div>
-
-                  <div className="text-[9px] font-semibold uppercase tracking-[0.25em] text-[#B68A3A]">
-                    College
-                  </div>
-                </div>
-              </div>
-
-              <p className="mt-6 max-w-sm text-sm leading-7 text-[#082744]/50">
-                B-120 A, Revenue Estate Village of Khushrupur, Vishnu Garden,
-                Keshav Kunj, Sector-105, Dwarka Expressway, 122001
-                <br></br>
-                +919088966666
-              </p>
-
-              <div className="mt-6 flex gap-3">
-                {[Globe2, MessageCircle, MapPin].map((Icon, index) => (
-                  <button
-                    key={index}
-                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#082744]/10 text-[#082744]/60 transition hover:border-[#B68A3A] hover:text-[#B68A3A]"
-                  >
-                    <Icon size={16} />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Explore */}
-
-            <div>
-              <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#082744]">
-                Explore
-              </h4>
-
-              <div className="mt-5 space-y-3">
-                {[
-                  "Programmes",
-                  "Institutions",
-                  "Why Union",
-                  "How It Works",
-                ].map((item) => (
-                  <button
-                    key={item}
-                    className="block text-sm text-[#082744]/50 transition hover:text-[#082744]"
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Union */}
-
-            <div>
-              <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#082744]">
-                Union
-              </h4>
-
-              <div className="mt-5 space-y-3">
-                {["About", "Contact", "Partners", "Careers"].map((item) => (
-                  <button
-                    key={item}
-                    className="block text-sm text-[#082744]/50 transition hover:text-[#082744]"
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Contact */}
-
-            <div>
-              <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#082744]">
-                Connect
-              </h4>
-
-              <div className="mt-5 space-y-3 text-sm text-[#082744]/50">
-                <p>Speak with an advisor</p>
-                <p>Explore opportunities</p>
-                <p>Start your journey</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-14 flex flex-col justify-between gap-4 border-t border-[#082744]/8 pt-7 text-xs text-[#082744]/40 md:flex-row">
-            <p>
-              © {new Date().getFullYear()} Union College. All rights reserved.
-            </p>
-
-            <div className="flex gap-5">
-              <button>Privacy</button>
-              <button>Terms</button>
-              <button>Disclaimer</button>
-            </div>
-          </div>
-        </div>
-      </footer>
-
-      {/* ======================================================
           PROGRAMME MODAL
       ====================================================== */}
-
-      <AnimatePresence>
-        {activeProgramme && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setActiveProgramme(null)}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-[#041827]/70 p-5 backdrop-blur-md"
-          >
-            <motion.div
-              initial={{
-                opacity: 0,
-                y: 30,
-                scale: 0.96,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                scale: 1,
-              }}
-              exit={{
-                opacity: 0,
-                y: 20,
-                scale: 0.97,
-              }}
-              transition={{
-                duration: 0.35,
-              }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative max-h-[90vh] w-full max-w-2xl overflow-auto rounded-[30px] bg-white shadow-2xl"
-            >
-              <div className="relative h-64">
-                <img
-                  src={activeProgramme.image}
-                  alt={activeProgramme.title}
-                  className="h-full w-full object-cover"
-                />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-[#082744] via-transparent to-transparent" />
-
-                <button
-                  onClick={() => setActiveProgramme(null)}
-                  className="absolute right-5 top-5 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-[#082744] backdrop-blur"
-                >
-                  <X size={18} />
-                </button>
-
-                <div className="absolute bottom-6 left-6 right-6">
-                  <div className="text-xs uppercase tracking-widest text-[#D2A755]">
-                    {activeProgramme.category}
-                  </div>
-
-                  <h3 className="mt-1 text-3xl font-semibold text-white">
-                    {activeProgramme.title}
-                  </h3>
-                </div>
-              </div>
-
-              <div className="p-7 md:p-9">
-                <p className="leading-7 text-[#082744]/60">
-                  {activeProgramme.description}
-                </p>
-
-                <div className="mt-7 grid grid-cols-2 gap-3">
-                  {[
-                    ["Level", activeProgramme.level],
-                    ["Duration", activeProgramme.duration],
-                    ["Mode", activeProgramme.mode],
-                    ["Institution", activeProgramme.institution],
-                  ].map(([label, value]) => (
-                    <div key={label} className="rounded-2xl bg-[#F8F6F0] p-4">
-                      <div className="text-[10px] uppercase tracking-wider text-[#082744]/40">
-                        {label}
-                      </div>
-
-                      <div className="mt-1 text-sm font-semibold text-[#082744]">
-                        {value}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                  <GoldButton>Enquire About This Programme</GoldButton>
-
-                  <OutlineButton onClick={() => setActiveProgramme(null)}>
-                    Close
-                  </OutlineButton>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
