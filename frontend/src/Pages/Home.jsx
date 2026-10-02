@@ -33,6 +33,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import universityProgrammes from "../data/universityProgrammes";
 
 /* ============================================================
    UNION COLLEGE — HOME PAGE
@@ -80,41 +81,43 @@ const images = {
    DATA
 ============================================================ */
 
-const programmes = [
-  {
-    title: "Business & Management",
-    category: "Business",
-    institution: "Union College",
-    level: "Undergraduate",
-    duration: "3 Years",
-    mode: "On Campus",
-    image: images.students,
-    description:
-      "Build a strong foundation in business, leadership, strategy and modern management.",
-  },
-  {
-    title: "Computer Science",
-    category: "Technology",
-    institution: "Union College",
-    level: "Undergraduate",
-    duration: "4 Years",
-    mode: "On Campus",
-    image: images.technology,
-    description:
-      "Develop practical technology skills across software, systems, data and digital innovation.",
-  },
-  {
-    title: "Data & Analytics",
-    category: "Technology",
-    institution: "Union College",
-    level: "Postgraduate",
-    duration: "2 Years",
-    mode: "Flexible",
-    image: images.lecture,
-    description:
-      "Turn data into insight through analytical thinking, technology and applied problem solving.",
-  },
-];
+const getProgrammeLevel = (title = "") => {
+  const value = title.toLowerCase();
+  if (value.includes("ph.d") || value.includes("phd") || value.includes("doctor")) return "Doctoral";
+  if (value.includes("master") || value.includes("m.a") || value.includes("m.b.a") || value.includes("mba") || value.includes("m.com") || value.includes("m.sc") || value.includes("post graduate") || value.includes("post graduation")) return "Postgraduate";
+  if (value.includes("diploma") || value.includes("certificate")) return "Diploma / Certificate";
+  return "Undergraduate";
+};
+
+const getProgrammeImage = (faculty = "") => {
+  const value = faculty.toLowerCase();
+  if (value.includes("technology") || value.includes("computer") || value.includes("science")) return images.technology;
+  if (value.includes("hospitality") || value.includes("tourism")) return images.lecture;
+  return images.students;
+};
+
+const programmes = Object.values(universityProgrammes)
+  .flat()
+  .filter(Boolean)
+  .map((item) => ({
+    id: item.id,
+    slug: item.institutionSlug
+      ? item.institutionSlug + "-" + String(item.id).toLowerCase().replace(/[^a-z0-9]+/g, "-")
+      : "",
+    title: item.programme,
+    category: item.faculty || "Other",
+    institution: item.institutionName || "Partner Institution",
+    institutionSlug: item.institutionSlug || "",
+    level: getProgrammeLevel(item.programme),
+    duration: item.duration
+      ? String(item.duration) + " Year" + (String(item.duration) === "1" ? "" : "s")
+      : "Duration on enquiry",
+    mode: item.studyPattern || "Semester pattern on enquiry",
+    image: getProgrammeImage(item.faculty),
+    description: item.specialisation
+      ? item.programme + " with specialisation options including " + item.specialisation + "."
+      : "Explore " + item.programme + " under " + (item.faculty || "this faculty") + " at " + (item.institutionName || "the partner institution") + ".",
+  }));
 
 const institutions = [
   {
@@ -269,7 +272,6 @@ function OutlineButton({ children, onClick, dark = false }) {
 
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeProgramme, setActiveProgramme] = useState(null);
 
   const [finder, setFinder] = useState({
     search: "",
@@ -674,8 +676,11 @@ export default function Home() {
                   className="appearance-none rounded-2xl border border-[#082744]/8 bg-[#F8F6F0] px-4 py-4 text-sm text-[#082744] outline-none"
                 >
                   <option>All Faculties</option>
-                  <option>Business</option>
-                  <option>Technology</option>
+                  {Array.from(new Set(programmes.map((item) => item.category).filter(Boolean)))
+                    .sort()
+                    .map((faculty) => (
+                      <option key={faculty}>{faculty}</option>
+                    ))}
                 </select>
 
                 <select
@@ -684,7 +689,11 @@ export default function Home() {
                   className="appearance-none rounded-2xl border border-[#082744]/8 bg-[#F8F6F0] px-4 py-4 text-sm text-[#082744] outline-none"
                 >
                   <option>All Institutions</option>
-                  <option>Union College</option>
+                  {Array.from(new Set(programmes.map((item) => item.institution).filter(Boolean)))
+                    .sort()
+                    .map((institution) => (
+                      <option key={institution}>{institution}</option>
+                    ))}
                 </select>
 
                 <button
@@ -741,7 +750,7 @@ export default function Home() {
             viewport={{ once: true, margin: "-100px" }}
             className="mt-12 grid gap-7 lg:grid-cols-3"
           >
-            {filteredProgrammes.map((programme, index) => (
+            {filteredProgrammes.slice(0, 6).map((programme) => (
               <motion.article
                 key={programme.title}
                 variants={fadeUp}
@@ -791,13 +800,13 @@ export default function Home() {
                     </span>
                   </div>
 
-                  <button
-                    onClick={() => setActiveProgramme(programme)}
-                    className="mt-7 flex w-full items-center justify-between rounded-2xl bg-[#082744] px-5 py-4 text-sm font-semibold text-white transition group-hover:bg-[#B68A3A]"
+                  <Link
+                    to={"/programmes/" + programme.slug}
+                    className="mt-7 flex w-full items-center justify-between rounded-2xl bg-[#082744] px-5 py-4 text-sm font-semibold text-white transition hover:bg-[#B68A3A]"
                   >
-                    Explore Programme
+                    View Programme
                     <ArrowUpRight size={17} />
-                  </button>
+                  </Link>
                 </div>
               </motion.article>
             ))}
