@@ -415,18 +415,41 @@ const Programmes = () => {
                       <span>{programme.institution}</span>
                     </div>
 
-                    <div className="flex items-center justify-between gap-3 border-y border-[#082744]/8 py-4">
+                    <div className="grid grid-cols-2 gap-3 border-y border-[#082744]/8 py-4">
                       <div className="flex items-center gap-2">
-                        <Clock3 size={15} className="text-[#B68A3A]" />
-                        <span className="text-xs text-[#082744]/60">
-                          {programme.duration}
-                        </span>
+                        <Clock3 size={15} className="shrink-0 text-[#B68A3A]" />
+                        <div>
+                          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#082744]/35">
+                            Duration
+                          </p>
+                          <p className="mt-1 text-xs font-medium text-[#082744]/70">
+                            {programme.duration}
+                          </p>
+                        </div>
                       </div>
 
-                      <span className="text-right text-xs text-[#082744]/50">
-                        {programme.mode}
-                      </span>
+                      <div className="text-right">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#082744]/35">
+                          Tuition / Year
+                        </p>
+                        <p className="mt-1 text-sm font-semibold text-[#082744]">
+                          {programme.tuitionFeeYearly
+                            ? `₹${Number(programme.tuitionFeeYearly).toLocaleString("en-IN")}`
+                            : "On enquiry"}
+                        </p>
+                      </div>
                     </div>
+
+                    {programme.totalStudentFee && (
+                      <div className="mt-3 flex items-center justify-between rounded-xl bg-[#F8F6F1] px-4 py-3">
+                        <span className="text-xs font-medium text-[#082744]/50">
+                          Total Student Fee
+                        </span>
+                        <span className="text-sm font-semibold text-[#082744]">
+                          ₹{Number(programme.totalStudentFee).toLocaleString("en-IN")}
+                        </span>
+                      </div>
+                    )}
 
                     <Link
                       to={
