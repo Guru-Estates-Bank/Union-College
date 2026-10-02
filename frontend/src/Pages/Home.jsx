@@ -957,77 +957,6 @@ export default function Home() {
       </section>
 
       {/* ======================================================
-          INSTITUTIONS
-      ====================================================== */}
-
-      <section id="institutions" className="scroll-mt-28 px-6 py-28 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="max-w-2xl"
-          >
-            <SectionLabel>Institutions</SectionLabel>
-
-            <h2 className="font-serif text-4xl tracking-[-0.03em] md:text-5xl">
-              Discover the places
-              <span className="text-[#B68A3A]"> behind the opportunities.</span>
-            </h2>
-
-            <p className="mt-6 text-sm leading-7 text-[#082744]/55">
-              Explore institutions and understand the environments where your
-              academic journey can take shape.
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={stagger}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="mt-12 grid gap-5 md:grid-cols-2"
-          >
-            {institutions.map((institution, index) => (
-              <motion.div
-                key={institution.name}
-                variants={fadeUp}
-                whileHover={{ scale: 1.015 }}
-                className="group relative h-[360px] overflow-hidden rounded-[30px]"
-              >
-                <img
-                  src={institution.image}
-                  alt={institution.name}
-                  className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-[#041827] via-[#041827]/20 to-transparent" />
-
-                <div className="absolute bottom-0 left-0 right-0 p-7">
-                  <div className="mb-3 flex items-center justify-between">
-                    <span className="rounded-full bg-white/15 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white backdrop-blur">
-                      {institution.category}
-                    </span>
-
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#082744] transition group-hover:bg-[#B68A3A] group-hover:text-white"></div>
-                  </div>
-
-                  <h3 className="text-2xl font-semibold text-white">
-                    {institution.name}
-                  </h3>
-
-                  <p className="mt-2 text-sm text-white/55">
-                    Explore programmes, opportunities and academic pathways.
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ======================================================
           WHY UNION
       ====================================================== */}
 
@@ -1297,7 +1226,13 @@ export default function Home() {
                 <GoldButton>Talk to an Advisor</GoldButton>
               </Link>
 
-              <OutlineButton dark>Explore Programmes</OutlineButton>
+              <Link
+                to="/programmes"
+                className="inline-flex items-center gap-3 rounded-full border border-white/20 px-6 py-3.5 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/5"
+              >
+                Explore Programmes
+                <ArrowUpRight size={16} />
+              </Link>
             </div>
           </div>
         </motion.div>
