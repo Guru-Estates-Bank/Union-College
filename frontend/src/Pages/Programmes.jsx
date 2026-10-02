@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
+  ArrowUp,
   BookOpen,
   ChevronDown,
   Clock3,
@@ -245,6 +246,19 @@ const Programmes = () => {
     (safePage - 1) * PAGE_SIZE,
     safePage * PAGE_SIZE
   );
+
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setShowBackToTop(window.scrollY > 500);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const goToPage = (page) => {
     const nextPage = Math.max(1, Math.min(page, totalPages));
@@ -574,6 +588,17 @@ const Programmes = () => {
           </Link>
         </div>
       </section>
+      {showBackToTop && (
+        <button
+          type="button"
+          onClick={scrollToTop}
+          aria-label="Back to top"
+          title="Back to top"
+          className="fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-[#082744] text-white shadow-[0_10px_30px_rgba(8,39,68,0.2)] transition hover:-translate-y-1 hover:bg-[#B68A3A] focus:outline-none focus:ring-4 focus:ring-[#B68A3A]/30 sm:bottom-8 sm:right-8"
+        >
+          <ArrowUp size={18} />
+        </button>
+      )}
     </main>
   );
 };
