@@ -118,11 +118,11 @@ Thank you. I look forward to hearing from your admissions team. 🙏
                   </div>
 
                   <div>
-                    <p className="text-xs uppercase tracking-wider text-[#082744]/40 mb-1">
+                    <p className="text-xs uppercase tracking-wider text-[#082744]/50 mb-1">
                       Speak with us
                     </p>
 
-                    <p className="font-semibold">Talk to an Advisor</p>
+                    <p className="font-semibold">+91 9088966666</p>
                   </div>
                 </div>
 
@@ -132,12 +132,12 @@ Thank you. I look forward to hearing from your admissions team. 🙏
                   </div>
 
                   <div>
-                    <p className="text-xs uppercase tracking-wider text-[#082744]/40 mb-1">
+                    <p className="text-xs uppercase tracking-wider text-[#082744]/50 mb-1">
                       Your enquiry
                     </p>
 
                     <p className="font-semibold">
-                      We'll help you find relevant options
+                      info@unioncollege.in
                     </p>
                   </div>
                 </div>
