@@ -8,9 +8,18 @@ const splitProgrammeName = (value) => {
 
   // The source PDF uses both em dashes and en dashes for
   // programme → specialization separation.
-  const dashMatch = normalized.match(/\s+[—–]\s+/);
-  if (dashMatch) {
-    const dashIndex = normalized.indexOf(dashMatch[0]);
+  const dashMatches = [...normalized.matchAll(/\s+[—–]\s+/g)];
+  if (dashMatches.length > 0) {
+    let dashMatch = dashMatches[0];
+    let dashIndex = dashMatch.index;
+
+    // "Executive – Master of Business Administration (E-MBA) –
+    // Marketing, ..." contains a title dash followed by a specialization dash.
+    if (normalized.startsWith("Executive ") && dashMatches.length > 1) {
+      dashMatch = dashMatches[1];
+      dashIndex = dashMatch.index;
+    }
+
     return {
       programme: normalized.slice(0, dashIndex).trim(),
       specialisation: normalized.slice(dashIndex + dashMatch[0].length).trim(),
@@ -44,7 +53,7 @@ const splitProgrammeName = (value) => {
   for (const prefix of degreePrefixes) {
     if (normalized.startsWith(prefix + " ")) {
       const remainder = normalized.slice(prefix.length).trim();
-      if (remainder && /[A-Za-z].*,/.test(remainder)) {
+      if (remainder && /[A-Za-z].*(,|\/)/.test(remainder)) {
         return {
           programme: prefix,
           specialisation: remainder,
