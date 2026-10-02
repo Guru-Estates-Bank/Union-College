@@ -453,17 +453,9 @@ const Programmes = () => {
 
                     <Link
                       to={
-                        programme.sourceType === "university" &&
-                        programme.institutionSlug &&
-                        institutionData.some(
-                          (institution) => institution.slug === programme.institutionSlug
-                        )
-                          ? `/institutions/${programme.institutionSlug}#programmes`
-                          : programme.sourceType === "university"
-                            ? "/contact"
-                            : programme.slug
-                            ? `/programmes/${programme.slug}`
-                            : "/contact"
+                        programme.slug
+                          ? `/programmes/${programme.slug}`
+                          : "/contact"
                       }
                       className="group/button mt-5 flex w-full items-center justify-between font-semibold text-[#082744]"
                     >
