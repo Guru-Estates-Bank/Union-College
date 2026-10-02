@@ -121,6 +121,14 @@ const programmes = Object.values(universityProgrammes)
       : "Explore " + item.programme + " under " + (item.faculty || "this faculty") + " at " + (item.institutionName || "the partner institution") + ".",
   }));
 
+const featuredProgrammes = [
+  "ssu-commerce-01",
+  "ssu-commerce-09",
+  "ssu-commerce-05",
+]
+  .map((id) => programmes.find((item) => item.id === id))
+  .filter(Boolean);
+
 const institutions = [
   {
     name: "Union College",
@@ -739,13 +747,13 @@ export default function Home() {
               </h2>
             </div>
 
-            <button
-              onClick={() => scrollToSection("finder")}
+            <Link
+              to="/programmes"
               className="flex items-center gap-2 text-sm font-semibold text-[#082744]"
             >
               View all programmes
               <ArrowRight size={16} />
-            </button>
+            </Link>
           </motion.div>
 
           <motion.div
@@ -755,7 +763,7 @@ export default function Home() {
             viewport={{ once: true, margin: "-100px" }}
             className="mt-12 grid gap-7 lg:grid-cols-3"
           >
-            {filteredProgrammes.slice(0, 6).map((programme) => (
+            {featuredProgrammes.map((programme) => (
               <motion.article
                 key={programme.title}
                 variants={fadeUp}
