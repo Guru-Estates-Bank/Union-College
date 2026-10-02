@@ -3,6 +3,57 @@ const academicYear = "2026-27";
 const institutionName = "Sikkim Skill University";
 const location = "South Sikkim, India";
 
+const splitProgrammeName = (value) => {
+  const dashIndex = value.indexOf(" — ");
+
+  if (dashIndex > 0) {
+    return {
+      programme: value.slice(0, dashIndex).trim(),
+      specialisation: value.slice(dashIndex + 3).trim(),
+    };
+  }
+
+  // Only split "in" when the text before it is clearly a degree/title
+  // or when the remainder is a list. This keeps titles such as
+  // "Bachelor in Public Health" intact.
+  const inIndex = value.indexOf(" in ");
+  if (inIndex > 0) {
+    const base = value.slice(0, inIndex).trim();
+    const remainder = value.slice(inIndex + 4).trim();
+
+    if (
+      base.endsWith(")") ||
+      remainder.includes(",") ||
+      base === "Diploma" ||
+      base === "Advanced Diploma" ||
+      base === "Post Graduate Diploma" ||
+      base === "Certificate Course" ||
+      base === "M.Tech" ||
+      base === "BA/B.Sc" ||
+      base === "MA/M.Sc"
+    ) {
+      return {
+        programme: base,
+        specialisation: remainder,
+      };
+    }
+  }
+
+  // BBA-style records contain the specialisations inside one parenthesis.
+  const parentheticalList = value.match(/^(.+?)\\s+\\(([^)]+\\/[^)]+)\\)$/);
+  if (parentheticalList) {
+    return {
+      programme: parentheticalList[1].trim(),
+      specialisation: parentheticalList[2].trim(),
+    };
+  }
+
+  return {
+    programme: value.trim(),
+    specialisation: "",
+  };
+};
+
 const makeProgramme = (
   id,
   faculty,
@@ -12,22 +63,27 @@ const makeProgramme = (
   eligibility,
   tuitionFeeYearly,
   totalStudentFee,
-) => ({
-  id: `ssu-${id}`,
-  institutionSlug: "sikkim-skill-university",
-  institutionName,
-  location,
-  faculty,
-  programme,
-  specialisation: "",
-  duration: String(duration),
-  studyPattern,
-  eligibility,
-  tuitionFeeYearly,
-  totalStudentFee,
-  academicYear,
-  source,
-});
+) => {
+  const parsed = splitProgrammeName(programme);
+
+  return {
+    id: `ssu-${id}`,
+    institutionSlug: "sikkim-skill-university",
+    institutionName,
+    location,
+    faculty,
+    programme: parsed.programme,
+    specialisation: parsed.specialisation,
+    sourceProgramme: programme,
+    duration: String(duration),
+    studyPattern,
+    eligibility,
+    tuitionFeeYearly,
+    totalStudentFee,
+    academicYear,
+    source,
+  };
+};
 
 const sikkimSkillUniversityProgrammes = [
   // FACULTY OF COMMERCE AND MANAGEMENT
