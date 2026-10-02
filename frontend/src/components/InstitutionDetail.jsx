@@ -299,7 +299,10 @@ export default function InstitutionDetail() {
                             </p>
                           )}
 
-                          <h3 className="mt-2 font-serif text-2xl font-semibold leading-tight text-[#082744]">
+                          <h3
+                            title={item.programme || item.title || "Programme"}
+                            className="mt-2 min-h-[3.75rem] line-clamp-2 font-serif text-2xl font-semibold leading-tight text-[#082744]"
+                          >
                             {item.programme || item.title || "Programme"}
                           </h3>
 
