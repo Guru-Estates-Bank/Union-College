@@ -113,6 +113,8 @@ const programmes = Object.values(universityProgrammes)
       ? String(item.duration) + " Year" + (String(item.duration) === "1" ? "" : "s")
       : "Duration on enquiry",
     mode: item.studyPattern || "Semester pattern on enquiry",
+    tuitionFeeYearly: item.tuitionFeeYearly ?? null,
+    totalStudentFee: item.totalStudentFee ?? null,
     image: getProgrammeImage(item.faculty),
     description: item.specialisation
       ? item.programme + " with specialisation options including " + item.specialisation + "."
@@ -666,8 +668,11 @@ export default function Home() {
                   className="appearance-none rounded-2xl border border-[#082744]/8 bg-[#F8F6F0] px-4 py-4 text-sm text-[#082744] outline-none"
                 >
                   <option>All Levels</option>
-                  <option>Undergraduate</option>
-                  <option>Postgraduate</option>
+                  {Array.from(new Set(programmes.map((item) => item.level).filter(Boolean)))
+                    .sort()
+                    .map((level) => (
+                      <option key={level}>{level}</option>
+                    ))}
                 </select>
 
                 <select
@@ -798,6 +803,12 @@ export default function Home() {
                     <span className="rounded-full bg-white px-3 py-1.5 text-[11px] font-medium text-[#082744]/65">
                       {programme.mode}
                     </span>
+
+                    {programme.tuitionFeeYearly && (
+                      <span className="rounded-full bg-white px-3 py-1.5 text-[11px] font-medium text-[#082744]/65">
+                        ₹{Number(programme.tuitionFeeYearly).toLocaleString("en-IN")}/year
+                      </span>
+                    )}
                   </div>
 
                   <Link
