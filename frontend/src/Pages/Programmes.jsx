@@ -379,7 +379,7 @@ const Programmes = () => {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           {filteredProgrammes.length > 0 ? (
             <div className="grid gap-7 md:grid-cols-2 lg:grid-cols-3">
-              {filteredProgrammes.map((programme, index) => (
+              {paginatedProgrammes.map((programme, index) => (
                 <motion.article
                   key={programme.id}
                   initial={{ opacity: 0, y: 30 }}
