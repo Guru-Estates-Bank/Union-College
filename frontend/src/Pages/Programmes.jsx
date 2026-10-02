@@ -72,7 +72,10 @@ const getLevel = (title = "") => {
     value.includes("b.a") ||
     value.includes("b.a.") ||
     value.includes("bsw") ||
-    value.includes("b.s.w")
+    value.includes("b.s.w") ||
+    value.includes("b.tech") ||
+    value.includes("b.e.") ||
+    value.includes("d2d")
   ) {
     return "Undergraduate";
   }
@@ -427,9 +430,15 @@ const Programmes = () => {
 
                     <Link
                       to={
-                        programme.sourceType === "university" && programme.institutionSlug
+                        programme.sourceType === "university" &&
+                        programme.institutionSlug &&
+                        institutionData.some(
+                          (institution) => institution.slug === programme.institutionSlug
+                        )
                           ? `/institutions/${programme.institutionSlug}#programmes`
-                          : programme.slug
+                          : programme.sourceType === "university"
+                            ? "/contact"
+                            : programme.slug
                             ? `/programmes/${programme.slug}`
                             : "/contact"
                       }
