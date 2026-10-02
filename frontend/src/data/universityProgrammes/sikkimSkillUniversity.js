@@ -4,34 +4,72 @@ const institutionName = "Sikkim Skill University";
 const location = "South Sikkim, India";
 
 const splitProgrammeName = (value) => {
-  const dashIndex = value.indexOf(" — ");
+  const normalized = value.replace(/\s+/g, " ").trim();
 
-  if (dashIndex > 0) {
+  // The source PDF uses both em dashes and en dashes for
+  // programme → specialization separation.
+  const dashMatch = normalized.match(/\s+[—–]\s+/);
+  if (dashMatch) {
+    const dashIndex = normalized.indexOf(dashMatch[0]);
     return {
-      programme: value.slice(0, dashIndex).trim(),
-      specialisation: value.slice(dashIndex + 3).trim(),
+      programme: normalized.slice(0, dashIndex).trim(),
+      specialisation: normalized.slice(dashIndex + dashMatch[0].length).trim(),
     };
   }
 
-  // Only split "in" when the text before it is clearly a degree/title
-  // or when the remainder is a list. This keeps titles such as
-  // "Bachelor in Public Health" intact.
-  const inIndex = value.indexOf(" in ");
-  if (inIndex > 0) {
-    const base = value.slice(0, inIndex).trim();
-    const remainder = value.slice(inIndex + 4).trim();
+  // Keep the degree name short and move a following subject list into
+  // the expandable specialization area.
+  const degreePrefixes = [
+    "Master of Science (M.Sc.)",
+    "Master of Science (M.Sc)",
+    "Bachelor of Science (B.Sc.)",
+    "Bachelor of Science (B.Sc)",
+    "Master of Arts (M.A)",
+    "Bachelor of Arts (B.A)",
+    "Master of Business Administration (MBA)",
+    "Master of Computer Application (MCA)",
+    "Bachelor of Computer Application (BCA)",
+    "Bachelor of Social Work (BSW)",
+    "Master of Social Work (MSW)",
+    "M.Sc.",
+    "B.Sc.",
+    "B.B.A.",
+    "B.S.W.",
+    "B.C.A.",
+    "M.A.",
+    "M.S.W.",
+    "M.C.A.",
+  ];
 
-    if (
-      base.endsWith(")") ||
-      remainder.includes(",") ||
-      base === "Diploma" ||
-      base === "Advanced Diploma" ||
-      base === "Post Graduate Diploma" ||
-      base === "Certificate Course" ||
-      base === "M.Tech" ||
-      base === "BA/B.Sc" ||
-      base === "MA/M.Sc"
-    ) {
+  for (const prefix of degreePrefixes) {
+    if (normalized.startsWith(prefix + " ")) {
+      const remainder = normalized.slice(prefix.length).trim();
+      if (remainder && /[A-Za-z].*,/.test(remainder)) {
+        return {
+          programme: prefix,
+          specialisation: remainder,
+        };
+      }
+    }
+  }
+
+  // Parenthetical specialization lists such as BBA (General/...).
+  const parentheticalList = normalized.match(/^(.+?)\s+\(([^)]+\/+[^)]*)\)(.*)$/);
+  if (parentheticalList) {
+    const trailing = parentheticalList[3].trim();
+    return {
+      programme: parentheticalList[1].trim(),
+      specialisation: [parentheticalList[2].trim(), trailing].filter(Boolean).join(" "),
+    };
+  }
+
+  // Keep "in <subjects>" as specialization when it is a long subject list.
+  const inIndex = normalized.indexOf(" in ");
+  if (inIndex > 0) {
+    const base = normalized.slice(0, inIndex).trim();
+    const remainder = normalized.slice(inIndex + 4).trim();
+
+    if (remainder.includes(",")) {
       return {
         programme: base,
         specialisation: remainder,
@@ -39,17 +77,8 @@ const splitProgrammeName = (value) => {
     }
   }
 
-  // BBA-style records contain the specialisations inside one parenthesis.
-  const parentheticalList = value.match(/^(.+?)\s+\(([^)]+\/[^)]+)\)$/);
-  if (parentheticalList) {
-    return {
-      programme: parentheticalList[1].trim(),
-      specialisation: parentheticalList[2].trim(),
-    };
-  }
-
   return {
-    programme: value.trim(),
+    programme: normalized,
     specialisation: "",
   };
 };
