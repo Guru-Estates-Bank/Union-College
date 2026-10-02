@@ -40,7 +40,7 @@ const splitProgrammeName = (value) => {
   }
 
   // BBA-style records contain the specialisations inside one parenthesis.
-  const parentheticalList = value.match(/^(.+?)\\s+\\(([^)]+\\/[^)]+)\\)$/);
+  const parentheticalList = value.match(/^(.+?)\s+\(([^)]+\/[^)]+)\)$/);
   if (parentheticalList) {
     return {
       programme: parentheticalList[1].trim(),
