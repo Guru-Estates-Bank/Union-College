@@ -394,6 +394,62 @@ const institutionData = [
       "Programme-specific documents",
     ],
   },
+
+    {
+    id: 8,
+    slug: "indra-institute-of-management-studies",
+    name: "Indra Institute of Management Studies",
+    shortName: "IIMS",
+
+    location: "Dewas, Madhya Pradesh, India",
+
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRbZqpo12Q1iVuurWeWwtIVI1ANi1sVF-yDDCWOMx9u152fpbl7oBV8DQ&s=10",
+
+    logo: null,
+
+    website: "https://www.iims-india.com/",
+
+    description:
+      "A professional institute in Dewas offering regular on-campus programmes in management, computer applications, law and pharmacy.",
+
+    about:
+      "Indra Institute of Management Studies (IIMS), established in 2020, focuses on professional and career-oriented education with regular on-campus programmes and practical learning opportunities.",
+
+    recognition:
+      "The institute's official website states that its programmes include AICTE-approved and university-affiliated offerings. Students should verify programme-specific approvals, affiliations and eligibility requirements before admission.",
+
+    programmes: [
+      "MBA (General Management)",
+      "MBA (Marketing Management)",
+      "Master of Computer Applications (MCA)",
+      "Bachelor of Laws (LLB)",
+      "B.A. LL.B. (Hons.)",
+      "Diploma in Pharmacy (D.Pharm)",
+    ],
+
+    learningModes: [
+      "On Campus",
+      "Regular",
+    ],
+
+    admission:
+      "Admission requirements and eligibility vary according to the selected programme. Students should review the applicable programme requirements and admission process before applying.",
+
+    admissionProcess: [
+      "Explore available programmes",
+      "Check programme eligibility",
+      "Select your preferred programme",
+      "Submit the required documents",
+      "Complete the relevant admission process",
+    ],
+
+    documents: [
+      "Academic qualification documents",
+      "Identity proof",
+      "Passport-size photographs",
+      "Programme-specific documents",
+    ],
+  },
 ];
 
 export default institutionData;
