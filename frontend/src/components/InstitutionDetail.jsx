@@ -321,7 +321,7 @@ export default function InstitutionDetail() {
         </div>
 
         {programmes.length > 0 ? (
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid items-stretch gap-6 md:grid-cols-2">
             {programmes.map((item) => {
               const generalFee = getFee(item, "generalFee");
               const obcFee = getFee(item, "obcFee");
@@ -337,10 +337,10 @@ export default function InstitutionDetail() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.35 }}
-                  className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+                  className="flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-shadow duration-300 hover:shadow-md"
                 >
                   {/* Programme heading */}
-                  <div className="border-b border-slate-100 p-6">
+                  <div className="min-h-[148px] border-b border-slate-100 p-6">
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         {item.faculty && (
@@ -372,7 +372,7 @@ export default function InstitutionDetail() {
                   </div>
 
                   {/* Programme information */}
-                  <div className="space-y-4 p-6">
+                  <div className="flex flex-1 flex-col space-y-4 p-6">
                     {item.duration && (
                       <ProgrammeInfo
                         icon={Clock3}
@@ -536,7 +536,7 @@ export default function InstitutionDetail() {
                     {/* Enquiry */}
                     <Link
                       to="/contact"
-                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 font-semibold text-white transition hover:bg-indigo-600"
+                      className="mt-auto flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 font-semibold text-white transition hover:bg-indigo-600"
                     >
                       Enquire about this programme
                       <ArrowRight className="h-4 w-4" />
