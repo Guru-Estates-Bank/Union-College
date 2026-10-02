@@ -26,6 +26,12 @@ export default function InstitutionDetail() {
   // Find the institution using the URL slug
   const institution = institutionData.find((item) => item.slug === slug);
 
+  // Programme data is mapped directly to the institution slug.
+  // Indra Institute of Management Studies is one single institution,
+  // so all of its Management, Computer Applications, Pharmacy and Law
+  // programmes are displayed on the same institution page.
+  const programmes = universityProgrammes[slug] || [];
+
   // If institution does not exist
   if (!institution) {
     return (
@@ -55,43 +61,10 @@ export default function InstitutionDetail() {
 
   /*
    * ---------------------------------------------------------
-   * PROGRAMME DATA
-   * ---------------------------------------------------------
-   *
-   * Standard universities:
-   *   universityProgrammes[slug]
-   *
-   * Indra Group:
-   *   All Indra programmes are stored in one file.
-   *   We filter them using institutionSlug so that:
-   *
-   *   Management Studies → only Management Studies courses
-   *   Medical & Science   → only Medical & Science courses
-   *   Institute of Law    → only Law courses
-   *
-   * This prevents all 24 Indra records appearing on every page.
-   */
-
-  let programmes = universityProgrammes[slug] || [];
-
-  if (
-    slug === "indra-institute-of-management-studies" ||
-    slug === "indra-institute-of-medical-and-science" ||
-    slug === "indra-institute-of-law"
-  ) {
-    const indraProgrammes = universityProgrammes["indra-group"] || [];
-
-    programmes = indraProgrammes.filter(
-      (item) => item.institutionSlug === slug
-    );
-  }
-
-  /*
-   * ---------------------------------------------------------
    * FALLBACK HERO IMAGE
    * ---------------------------------------------------------
    *
-   * Some institutions currently have image: null.
+   * Some institutions may have image: null.
    * Instead of rendering a broken image, use a simple
    * gradient-based visual.
    */
@@ -128,20 +101,6 @@ export default function InstitutionDetail() {
 
     return formatCurrency(item[key]);
   };
-
-  const hasInstallments =
-    Array.isArray(programmes) &&
-    programmes.some(
-      (programme) =>
-        Array.isArray(programme.installments) &&
-        programme.installments.length > 0
-    );
-
-  /*
-   * ---------------------------------------------------------
-   * PAGE
-   * ---------------------------------------------------------
-   */
 
   return (
     <main className="min-h-screen bg-slate-50">
