@@ -41,7 +41,7 @@ export default function Footer() {
                   College{" "}
                 </div>{" "}
               </div>{" "}
-            </a>{" "}
+            </Link>{" "}
             <p className="mt-6 max-w-sm text-sm leading-7 text-[#082744]/50">
               {" "}
               B-120 A, Revenue Estate Village of Khushrupur, Vishnu Garden,
