@@ -360,12 +360,29 @@ export default function InstitutionDetail() {
                         </h3>
 
                         {item.specialisation && (
-                          <p className="mt-2 text-sm leading-6 text-slate-600">
-                            <span className="font-semibold">
-                              Specialisation:
-                            </span>{" "}
-                            {item.specialisation}
-                          </p>
+                          <details className="mt-4 rounded-xl border border-slate-200 bg-slate-50">
+                            <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-indigo-600">
+                              View Specializations
+                            </summary>
+
+                            <div className="border-t border-slate-200 px-4 py-4">
+                              <div className="grid gap-2 sm:grid-cols-2">
+                                {item.specialisation
+                                  .split(",")
+                                  .map((specialisation) => specialisation.trim())
+                                  .filter(Boolean)
+                                  .map((specialisation, index) => (
+                                    <div
+                                      key={`${item.id}-specialisation-${index}`}
+                                      className="flex items-start gap-2 text-sm leading-6 text-slate-600"
+                                    >
+                                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-indigo-500" />
+                                      <span>{specialisation}</span>
+                                    </div>
+                                  ))}
+                              </div>
+                            </div>
+                          </details>
                         )}
                       </div>
 
