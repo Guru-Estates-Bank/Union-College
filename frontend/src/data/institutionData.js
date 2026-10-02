@@ -1,15 +1,15 @@
 const institutionData = [
   {
     id: 1,
-    slug: "union-institute-of-management",
-    name: "Union Institute of Management",
+    slug: "barkatullah-vishwavidyalaya",
+    name: "Barkatullah Vishwavidyalaya",
 
-    shortName: "UIM",
+    shortName: "BV",
 
-    location: "New Delhi, India",
+    location: "Bhopal, India",
 
     image:
-      "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1400&q=80",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmQZ6D4SZifniBsk7fj6nsOfwxvISEx-4cylo4MWDGY_lgHUXBJBVDiHYQ727wro-cKYqNYv1l5jk2sPde5zd-QuNU-cgqokcD4fGyioiNGjrCwgY7UHaoUIlWeMd7B-v3fZE_fcA=s1360-w1360-h1020-rw",
 
     logo: null,
 
@@ -53,15 +53,15 @@ const institutionData = [
 
   {
     id: 2,
-    slug: "union-school-of-technology",
-    name: "Union School of Technology",
+    slug: "rabindranath-tagore-university",
+    name: "Rabindranath Tagore University",
 
-    shortName: "UST",
+    shortName: "RTU",
 
-    location: "Bengaluru, India",
+    location: "Bhopal, India",
 
     image:
-      "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&w=1400&q=80",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWm3rGtv0eiMnJ4t9up68VXZm7SaUIhMJ0Jc7dlJoT9PsAiJJKF0AA9YRVPNn3oMlHFoSmJLnwCck8Gf5muMniz1nZWa2KiXfrPD0HgvSMmrZSkNiKixLTw4g0KZLLXYvDo8LP17=s1360-w1360-h1020-rw",
 
     logo: null,
 
@@ -104,15 +104,15 @@ const institutionData = [
 
   {
     id: 3,
-    slug: "union-college-of-business",
-    name: "Union College of Business",
+    slug: "william-carey-university",
+    name: "William Carey University",
 
-    shortName: "UCB",
+    shortName: "WCU",
 
-    location: "Mumbai, India",
+    location: "Shillong, Meghalaya, India",
 
     image:
-      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1400&q=80",
+      "https://catalog.wmcarey.edu/mime/media/5/437/DSC_1164small.jpg",
 
     logo: null,
 
