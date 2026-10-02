@@ -129,27 +129,27 @@ export default function Footer() {
             </h4>{" "}
             <div className="mt-5 space-y-3 text-sm text-[#082744]/50">
               {" "}
-              <a
-                href="#advisor"
+              <Link
+                to="/contact"
                 className="block transition hover:text-[#082744]"
               >
                 {" "}
                 Speak with an advisor{" "}
-              </a>{" "}
-              <a
-                href="/programmes"
+              </Link>{" "}
+              <Link
+                to="/programmes"
                 className="block transition hover:text-[#082744]"
               >
                 {" "}
                 Explore opportunities{" "}
-              </a>{" "}
-              <a
-                href="#advisor"
+              </Link>{" "}
+              <Link
+                to="/contact"
                 className="block transition hover:text-[#082744]"
               >
                 {" "}
                 Start your journey{" "}
-              </a>{" "}
+              </Link>{" "}
             </div>{" "}
           </div>{" "}
         </div>{" "}
