@@ -232,7 +232,7 @@ const institutionData = [
 
     location: "Bhopal, Madhya Pradesh, India",
 
-    image: null,
+    image: "https://images.shiksha.com/mediadata/images/1558506761phpXsu9mF.jpeg",
 
     logo: null,
 
@@ -289,7 +289,7 @@ const institutionData = [
 
     location: "Imphal, Manipur, India",
 
-    image: null,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThhX35enxzIcIetQjjxDle_zLiolymAbplMbqCZBRKg2fdYtjU2OWT4JQ&s=10",
 
     logo: null,
 
@@ -346,7 +346,7 @@ const institutionData = [
 
     location: "Indore, Madhya Pradesh, India",
 
-    image: null,
+    image: "https://franchiseindia.s3.ap-south-1.amazonaws.com/uploads/news/fi/69e871e7ce146.webp",
 
     logo: null,
 
