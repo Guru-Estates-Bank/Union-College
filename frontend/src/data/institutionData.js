@@ -395,7 +395,7 @@ const institutionData = [
     ],
   },
 
-    {
+      {
     id: 8,
     slug: "indra-institute-of-management-studies",
     name: "Indra Institute of Management Studies",
@@ -403,28 +403,30 @@ const institutionData = [
 
     location: "Dewas, Madhya Pradesh, India",
 
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRbZqpo12Q1iVuurWeWwtIVI1ANi1sVF-yDDCWOMx9u152fpbl7oBV8DQ&s=10",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRbZqpo12Q1iVuurWeWwtIVI1ANi1sVF-yDDCWOMx9u152fpbl7oBV8DQ&s=10",
 
     logo: null,
 
     website: "https://www.iims-india.com/",
 
     description:
-      "A professional institute in Dewas offering regular on-campus programmes in management, computer applications, law and pharmacy.",
+      "A professional institute in Dewas offering career-oriented programmes across management, computer applications, pharmaceutical sciences and law.",
 
     about:
-      "Indra Institute of Management Studies (IIMS), established in 2020, focuses on professional and career-oriented education with regular on-campus programmes and practical learning opportunities.",
+      "Indra Institute of Management Studies (IIMS) is a professional education institution in Dewas offering regular on-campus programmes across management, computer applications, pharmaceutical sciences and law.",
 
     recognition:
-      "The institute's official website states that its programmes include AICTE-approved and university-affiliated offerings. Students should verify programme-specific approvals, affiliations and eligibility requirements before admission.",
+      "Programme-specific approvals, affiliations, recognition and eligibility requirements should be verified through the official institution website and applicable regulatory authorities before admission.",
 
     programmes: [
       "MBA (General Management)",
       "MBA (Marketing Management)",
       "Master of Computer Applications (MCA)",
-      "Bachelor of Laws (LLB)",
-      "B.A. LL.B. (Hons.)",
+      "Bachelor of Pharmacy (B.Pharm)",
       "Diploma in Pharmacy (D.Pharm)",
+      "B.A. LL.B. (Hons.)",
+      "Bachelor of Laws (LLB)",
     ],
 
     learningModes: [
