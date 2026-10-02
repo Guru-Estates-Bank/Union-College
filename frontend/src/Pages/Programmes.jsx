@@ -8,7 +8,7 @@ import {
   Search,
   SlidersHorizontal,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 import institutionData from "../data/institutionData";
 import programmeData from "../data/programmeData";
@@ -160,6 +160,9 @@ const Programmes = () => {
   const [faculty, setFaculty] = useState("All Faculties");
   const [institution, setInstitution] = useState("All Institutions");
   const [showFilters, setShowFilters] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = Math.max(1, Number(searchParams.get("page")) || 1);
+  const PAGE_SIZE = 12;
 
   const levels = useMemo(
     () => [
@@ -233,6 +236,23 @@ const Programmes = () => {
     setLevel("All Levels");
     setFaculty("All Faculties");
     setInstitution("All Institutions");
+    setSearchParams({});
+  };
+
+  const totalPages = Math.max(1, Math.ceil(filteredProgrammes.length / PAGE_SIZE));
+  const safePage = Math.min(currentPage, totalPages);
+  const paginatedProgrammes = filteredProgrammes.slice(
+    (safePage - 1) * PAGE_SIZE,
+    safePage * PAGE_SIZE
+  );
+
+  const goToPage = (page) => {
+    const nextPage = Math.max(1, Math.min(page, totalPages));
+    const next = new URLSearchParams(searchParams);
+    if (nextPage === 1) next.delete("page");
+    else next.set("page", String(nextPage));
+    setSearchParams(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -469,6 +489,38 @@ const Programmes = () => {
                 </motion.article>
               ))}
             </div>
+
+            {totalPages > 1 && (
+              <nav className="mt-10 flex items-center justify-center gap-2" aria-label="Programme pagination">
+                <button
+                  type="button"
+                  onClick={() => goToPage(safePage - 1)}
+                  disabled={safePage === 1}
+                  className="rounded-full border border-[#082744]/10 px-4 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-35"
+                >
+                  Previous
+                </button>
+                {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                  <button
+                    key={page}
+                    type="button"
+                    onClick={() => goToPage(page)}
+                    className={`h-9 min-w-9 rounded-full px-3 text-sm font-semibold ${page === safePage ? "bg-[#082744] text-white" : "border border-[#082744]/10 text-[#082744]"}`}
+                    aria-current={page === safePage ? "page" : undefined}
+                  >
+                    {page}
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => goToPage(safePage + 1)}
+                  disabled={safePage === totalPages}
+                  className="rounded-full border border-[#082744]/10 px-4 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-35"
+                >
+                  Next
+                </button>
+              </nav>
+            )}
           ) : (
             <div className="rounded-[2rem] border border-[#082744]/5 bg-white p-16 text-center">
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#B68A3A]/10 text-[#B68A3A]">
