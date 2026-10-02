@@ -13,11 +13,41 @@ import {
 } from "lucide-react";
 
 import programmeData from "../data/programmeData";
+import institutionData from "../data/institutionData";
+import universityProgrammes from "../data/universityProgrammes";
+
+const getUniversityProgrammeSlug = (item) =>
+  `${item.institutionSlug}-${String(item.id).toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+
+const getInstitutionImage = (slug) =>
+  institutionData.find((item) => item.slug === slug)?.image || null;
+
+const getUniversityProgramme = (slug) => {
+  const all = Object.values(universityProgrammes).flat().filter(Boolean);
+  return all.find((item) => getUniversityProgrammeSlug(item) === slug) || null;
+};
+
+const normalizeUniversityProgramme = (item) => ({
+  ...item,
+  title: item.programme,
+  institution: item.institutionName || "Partner Institution",
+  level: item.programme?.toLowerCase().includes("master") || item.programme?.toLowerCase().includes("mba") || item.programme?.toLowerCase().includes("mca") || item.programme?.toLowerCase().includes("m.com") || item.programme?.toLowerCase().includes("m.sc") || item.programme?.toLowerCase().includes("post graduate") ? "Postgraduate" : item.programme?.toLowerCase().includes("diploma") ? "Diploma / Certificate" : "Undergraduate",
+  duration: item.duration ? `${item.duration} Year${String(item.duration) === "1" ? "" : "s"}` : "Available on enquiry",
+  mode: item.studyPattern || "Programme dependent",
+  image: getInstitutionImage(item.institutionSlug) || "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1600&q=85",
+  description: item.specialisation ? `${item.programme} with specialisation options including ${item.specialisation}.` : `Explore ${item.programme} at ${item.institutionName || "the partner institution"}.`,
+  fees: item.tuitionFeeYearly ? `Tuition fee: ₹${Number(item.tuitionFeeYearly).toLocaleString("en-IN")} per year${item.totalStudentFee ? ` · Total student fee: ₹${Number(item.totalStudentFee).toLocaleString("en-IN")}` : ""}.` : "Fee details available on enquiry.",
+  admission: item.eligibility || "Admission requirements are programme-specific. Please enquire for current admission guidance.",
+  documents: ["Academic qualification documents", "Identity proof", "Passport-size photographs", "Programme-specific documents"],
+  recognition: item.source ? `Programme information is based on the Union College programme and fee structure source. Students should verify current recognition, eligibility and admission requirements with the relevant institution.` : "Students should verify current recognition, eligibility and admission requirements with the relevant institution.",
+});
 
 const ProgrammeDetail = () => {
   const { slug } = useParams();
 
-  const programme = programmeData.find((item) => item.slug === slug);
+  const catalogueProgramme = programmeData.find((item) => item.slug === slug);
+  const universityProgramme = getUniversityProgramme(slug);
+  const programme = catalogueProgramme || (universityProgramme ? normalizeUniversityProgramme(universityProgramme) : null);
 
   // ---------------------------------------------------------
   // Programme not found
@@ -365,11 +395,13 @@ const ProgrammeDetail = () => {
               </InfoSection>
 
               {/* Specialisation */}
-              <InfoSection number="02" title="Specialisation">
-                <p className="text-lg text-[#082744]/60 leading-relaxed">
-                  {programme.specialisation}
-                </p>
-              </InfoSection>
+              {programme.specialisation && (
+                <InfoSection number="02" title="Specialisation">
+                  <p className="text-lg text-[#082744]/60 leading-relaxed">
+                    {programme.specialisation}
+                  </p>
+                </InfoSection>
+              )}
 
               {/* Fees */}
               <InfoSection number="03" title="Fees">
