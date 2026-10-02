@@ -39,17 +39,19 @@ export default function Institutions() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#B68A3A]/30 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#B68A3A]"
+              className="mb-7 flex items-center gap-3"
             >
-              <Building2 size={14} />
-              Institutions
+              <span className="h-[1px] w-10 bg-[#B68A3A]" />
+              <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#B68A3A]">
+                Institutions
+              </span>
             </motion.div>
 
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="font-serif text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl"
+              className="font-serif text-5xl leading-[0.95] tracking-[-0.03em] md:text-6xl lg:text-7xl"
             >
               Explore
               <span className="text-[#B68A3A]"> Institutions.</span>
@@ -59,7 +61,7 @@ export default function Institutions() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}
-              className="mt-7 max-w-2xl text-lg leading-8 text-[#082744]/65"
+              className="mt-7 max-w-2xl text-lg leading-relaxed text-[#082744]/65 md:text-xl"
             >
               Explore participating and listed institutions and discover the
               programmes associated with each institution.
@@ -100,7 +102,7 @@ export default function Institutions() {
                 Our Institutions
               </p>
 
-              <h2 className="mt-3 font-serif text-4xl font-semibold md:text-5xl">
+              <h2 className="mt-3 font-serif text-4xl md:text-5xl">
                 Find an institution
               </h2>
             </div>
@@ -150,7 +152,7 @@ export default function Institutions() {
                       Institution
                     </div>
 
-                    <h3 className="font-serif text-2xl font-semibold leading-tight text-[#082744]">
+                    <h3 className="font-serif text-2xl leading-tight text-[#082744]">
                       {institution.name}
                     </h3>
 
@@ -194,7 +196,7 @@ export default function Institutions() {
             <div className="rounded-3xl border border-[#082744]/10 bg-white px-6 py-20 text-center">
               <Building2 size={40} className="mx-auto text-[#B68A3A]" />
 
-              <h3 className="mt-5 font-serif text-2xl font-semibold">
+              <h3 className="mt-5 font-serif text-2xl">
                 No institutions found
               </h3>
 
@@ -211,7 +213,7 @@ export default function Institutions() {
         <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-[#082744] px-8 py-16 text-center md:px-16 md:py-20">
           <Sparkles className="mx-auto text-[#B68A3A]" size={28} />
 
-          <h2 className="mx-auto mt-6 max-w-3xl font-serif text-4xl font-semibold leading-tight text-white md:text-5xl">
+          <h2 className="mx-auto mt-6 max-w-3xl font-serif text-4xl leading-tight text-white md:text-5xl">
             Need help choosing an institution?
           </h2>
 
