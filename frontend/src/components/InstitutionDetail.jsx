@@ -19,6 +19,7 @@ import { Link, useParams } from "react-router-dom";
 
 import institutionData from "../data/institutionData";
 import universityProgrammes from "../data/universityProgrammes";
+import sikkimSkillUniversityProgrammes from "../data/universityProgrammes/sikkimSkillUniversity";
 
 export default function InstitutionDetail() {
   const { slug } = useParams();
@@ -30,7 +31,10 @@ export default function InstitutionDetail() {
   // Indra Institute of Management Studies is one single institution,
   // so all of its Management, Computer Applications, Pharmacy and Law
   // programmes are displayed on the same institution page.
-  const programmes = universityProgrammes[slug] || [];
+  const programmes =
+    slug === "sikkim-skill-university"
+      ? sikkimSkillUniversityProgrammes
+      : universityProgrammes[slug] || [];
 
   // If institution does not exist
   if (!institution) {
