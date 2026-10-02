@@ -116,6 +116,7 @@ const normalizeUniversityProgramme = (item) => {
     tuitionFeeYearly: item.tuitionFeeYearly ?? item.generalFee ?? null,
     totalStudentFee: item.totalStudentFee ?? null,
     source: item.source || "",
+    sourceType: "university",
   };
 };
 
@@ -124,6 +125,7 @@ const normalizeProgrammeData = (item) => ({
   institutionSlug: item.institutionSlug || "union-college",
   level: item.level || getLevel(item.title),
   specialisation: item.specialisation || "",
+  sourceType: "catalog",
 });
 
 const buildProgrammeDirectory = () => {
@@ -370,11 +372,11 @@ const Programmes = () => {
                     <img
                       src={
                         programme.image ||
-                        (programme.faculty || "")
+                        ((programme.faculty || "")
                           .toLowerCase()
                           .includes("technology")
                           ? FALLBACK_IMAGES.technology
-                          : FALLBACK_IMAGES.default
+                          : FALLBACK_IMAGES.default)
                       }
                       alt={programme.title}
                       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -392,7 +394,7 @@ const Programmes = () => {
                       {programme.faculty}
                     </p>
 
-                    <h2 className="mb-3 font-serif text-2xl leading-tight">
+                    <h2 className="mb-3 line-clamp-2 font-serif text-2xl leading-tight">
                       {programme.title}
                     </h2>
 
@@ -424,7 +426,13 @@ const Programmes = () => {
                     </div>
 
                     <Link
-                      to={programme.slug ? `/programmes/${programme.slug}` : "/contact"}
+                      to={
+                        programme.sourceType === "university" && programme.institutionSlug
+                          ? `/institutions/${programme.institutionSlug}#programmes`
+                          : programme.slug
+                            ? `/programmes/${programme.slug}`
+                            : "/contact"
+                      }
                       className="group/button mt-5 flex w-full items-center justify-between font-semibold text-[#082744]"
                     >
                       <span>View Programme</span>
