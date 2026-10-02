@@ -1,7 +1,7 @@
 import indraGroupProgrammes from "./indraGroup";
 
 const universityProgrammes = {
-  "indra-group": indraGroupProgrammes,
+  "indra-institute-of-management-studies": indraGroupProgrammes,
 };
 
 export default universityProgrammes;
