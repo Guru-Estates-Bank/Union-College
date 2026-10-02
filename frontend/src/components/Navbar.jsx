@@ -17,10 +17,6 @@ function GoldButton({ children }) {
 
 const navigation = [
   {
-    label: "About Us",
-    path: "/about",
-  },
-  {
     label: "Programmes",
     path: "/programmes",
   },
@@ -35,6 +31,10 @@ const navigation = [
   {
     label: "Contact",
     path: "/contact",
+  },
+  {
+    label: "About Us",
+    path: "/about",
   },
 ];
 
