@@ -1,16 +1,17 @@
 import React from "react";
 import { GraduationCap, Globe2, MessageCircle, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 const exploreLinks = [
-  ["Programmes", "programmes"],
-  ["Institutions", "institutions"],
-  ["Why Union", "why-union"],
-  ["How It Works", "how-it-works"],
+  ["Programmes", "/programmes"],
+  ["Institutions", "/institutions"],
+  ["Why Union", "/about#why-union"],
+  ["How It Works", "/admissions"],
 ];
 const unionLinks = [
-  ["About", "top"],
-  ["Contact", "advisor"],
-  ["Partners", "institutions"],
-  ["Careers", "advisor"],
+  ["About", "/about"],
+  ["Contact", "/contact"],
+  ["Partners", "/institutions"],
+  ["Careers", "/contact"],
 ];
 export default function Footer() {
   return (
@@ -23,7 +24,7 @@ export default function Footer() {
           {/* Brand */}{" "}
           <div>
             {" "}
-            <a href="#top" className="flex items-center gap-3">
+            <Link to="/" className="flex items-center gap-3">
               {" "}
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#082744] text-[#D2A755]">
                 {" "}
@@ -50,7 +51,7 @@ export default function Footer() {
             <div className="mt-6 flex gap-3">
               {" "}
               <a
-                href="#top"
+                href="/"
                 className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#082744]/10 text-[#082744]/60 transition hover:border-[#B68A3A] hover:text-[#B68A3A]"
                 aria-label="Website"
               >
@@ -68,7 +69,7 @@ export default function Footer() {
                 <MessageCircle size={16} />{" "}
               </a>{" "}
               <a
-                href="#advisor"
+                href="/contact"
                 className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#082744]/10 text-[#082744]/60 transition hover:border-[#B68A3A] hover:text-[#B68A3A]"
                 aria-label="Contact"
               >
@@ -86,15 +87,15 @@ export default function Footer() {
             </h4>{" "}
             <div className="mt-5 space-y-3">
               {" "}
-              {exploreLinks.map(([label, id]) => (
-                <a
-                  key={id}
-                  href={`#${id}`}
+              {exploreLinks.map(([label, path]) => (
+                <Link
+                  key={path}
+                  to={path}
                   className="block text-sm text-[#082744]/50 transition hover:text-[#082744]"
                 >
                   {" "}
                   {label}{" "}
-                </a>
+                </Link>
               ))}{" "}
             </div>{" "}
           </div>{" "}
@@ -107,15 +108,15 @@ export default function Footer() {
             </h4>{" "}
             <div className="mt-5 space-y-3">
               {" "}
-              {unionLinks.map(([label, id]) => (
-                <a
-                  key={label}
-                  href={`#${id}`}
+              {unionLinks.map(([label, path]) => (
+                <Link
+                  key={path}
+                  to={path}
                   className="block text-sm text-[#082744]/50 transition hover:text-[#082744]"
                 >
                   {" "}
                   {label}{" "}
-                </a>
+                </Link>
               ))}{" "}
             </div>{" "}
           </div>{" "}
@@ -136,7 +137,7 @@ export default function Footer() {
                 Speak with an advisor{" "}
               </a>{" "}
               <a
-                href="#programmes"
+                href="/programmes"
                 className="block transition hover:text-[#082744]"
               >
                 {" "}
@@ -162,18 +163,9 @@ export default function Footer() {
           </p>{" "}
           <div className="flex gap-5">
             {" "}
-            <button className="transition hover:text-[#082744]">
-              {" "}
-              Privacy{" "}
-            </button>{" "}
-            <button className="transition hover:text-[#082744]">
-              {" "}
-              Terms{" "}
-            </button>{" "}
-            <button className="transition hover:text-[#082744]">
-              {" "}
-              Disclaimer{" "}
-            </button>{" "}
+            <Link to="/privacy" className="transition hover:text-[#082744]">Privacy</Link>{" "}
+            <Link to="/terms" className="transition hover:text-[#082744]">Terms</Link>{" "}
+            <Link to="/disclaimer" className="transition hover:text-[#082744]">Disclaimer</Link>{" "}
           </div>{" "}
         </div>{" "}
       </div>{" "}
