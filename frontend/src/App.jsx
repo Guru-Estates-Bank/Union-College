@@ -12,6 +12,9 @@ import Footer from "./components/Footer";
 import InstitutionDetail from "./components/InstitutionDetail";
 import Institutions from "./Pages/Institutions";
 import Admissions from "./Pages/Admissions";
+import Privacy from "./Pages/Privacy";
+import Terms from "./Pages/Terms";
+import Disclaimer from "./Pages/Disclaimer";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -46,6 +49,9 @@ function App() {
         {/* Dynamic programme detail */}
         <Route path="/programmes/:slug" element={<ProgrammeDetail />} />
         <Route path="/admissions" element={<Admissions />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/disclaimer" element={<Disclaimer />} />
       </Routes>
 
       <Footer />
