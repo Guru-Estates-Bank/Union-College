@@ -10,6 +10,7 @@ import {
   GraduationCap,
   MapPin,
   ShieldCheck,
+  CalendarDays,
 } from "lucide-react";
 
 import programmeData from "../data/programmeData";
@@ -34,6 +35,8 @@ const normalizeUniversityProgramme = (item) => ({
   level: item.programme?.toLowerCase().includes("master") || item.programme?.toLowerCase().includes("mba") || item.programme?.toLowerCase().includes("mca") || item.programme?.toLowerCase().includes("m.com") || item.programme?.toLowerCase().includes("m.sc") || item.programme?.toLowerCase().includes("post graduate") ? "Postgraduate" : item.programme?.toLowerCase().includes("diploma") ? "Diploma / Certificate" : "Undergraduate",
   duration: item.duration ? `${item.duration} Year${String(item.duration) === "1" ? "" : "s"}` : "Available on enquiry",
   mode: item.studyPattern || "Programme dependent",
+  semesterPattern: item.studyPattern || "Available on enquiry",
+  academicYear: item.academicYear || "2026-27",
   image: getInstitutionImage(item.institutionSlug) || "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1600&q=85",
   description: item.specialisation ? `${item.programme} with specialisation options including ${item.specialisation}.` : `Explore ${item.programme} at ${item.institutionName || "the partner institution"}.`,
   fees: item.tuitionFeeYearly ? `Tuition fee: ₹${Number(item.tuitionFeeYearly).toLocaleString("en-IN")} per year${item.totalStudentFee ? ` · Total student fee: ₹${Number(item.totalStudentFee).toLocaleString("en-IN")}` : ""}.` : "Fee details available on enquiry.",
