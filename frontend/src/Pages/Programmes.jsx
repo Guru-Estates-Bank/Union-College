@@ -9,7 +9,145 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import programmes from "../data/programmeData";
+
+import institutionData from "../data/institutionData";
+import programmeData from "../data/programmeData";
+import universityProgrammes from "../data/universityProgrammes";
+
+const FALLBACK_IMAGES = {
+  business:
+    "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1600&q=85",
+  technology:
+    "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1600&q=85",
+  default:
+    "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1600&q=85",
+};
+
+const getLevel = (title = "") => {
+  const value = title.toLowerCase();
+
+  if (
+    value.includes("ph.d") ||
+    value.includes("phd") ||
+    value.includes("doctor of") ||
+    value.includes("doctoral")
+  ) {
+    return "Doctoral";
+  }
+
+  if (
+    value.includes("master") ||
+    value.includes("m.a") ||
+    value.includes("m.a.") ||
+    value.includes("m.b.a") ||
+    value.includes("mba") ||
+    value.includes("mca") ||
+    value.includes("m.com") ||
+    value.includes("m.sc") ||
+    value.includes("m.sc.") ||
+    value.includes("m.s.w") ||
+    value.includes("post graduate") ||
+    value.includes("postgraduate") ||
+    value.includes("pg diploma") ||
+    value.includes("post graduation")
+  ) {
+    return "Postgraduate";
+  }
+
+  if (
+    value.includes("diploma") ||
+    value.includes("certificate") ||
+    value.includes("vocational")
+  ) {
+    return "Diploma / Certificate";
+  }
+
+  if (
+    value.includes("bachelor") ||
+    value.includes("b.com") ||
+    value.includes("bba") ||
+    value.includes("bca") ||
+    value.includes("b.sc") ||
+    value.includes("b.sc.") ||
+    value.includes("b.a") ||
+    value.includes("b.a.") ||
+    value.includes("bsw") ||
+    value.includes("b.s.w")
+  ) {
+    return "Undergraduate";
+  }
+
+  return "Other";
+};
+
+const getInstitutionImage = (slug) => {
+  const institution = institutionData.find((item) => item.slug === slug);
+  return institution?.image || null;
+};
+
+const normalizeUniversityProgramme = (item) => {
+  const title = item.programme || "Programme";
+  const institutionSlug = item.institutionSlug || "";
+
+  return {
+    id: `university-${institutionSlug}-${item.id}`,
+    slug: `${institutionSlug}-${String(item.id).toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+    title,
+    faculty: item.faculty || "Other",
+    institution: item.institutionName || "Partner Institution",
+    institutionSlug,
+    level: getLevel(title),
+    duration: item.duration
+      ? /^\d+$/.test(String(item.duration))
+        ? `${item.duration} Year${String(item.duration) === "1" ? "" : "s"}`
+        : String(item.duration)
+      : "Duration available on enquiry",
+    mode: item.studyPattern || "Programme dependent",
+    image:
+      getInstitutionImage(institutionSlug) ||
+      (String(item.faculty || "").toLowerCase().includes("technology")
+        ? FALLBACK_IMAGES.technology
+        : FALLBACK_IMAGES.default),
+    description:
+      item.specialisation ||
+      `Explore this ${item.faculty || "academic"} programme at ${item.institutionName || "the partner institution"}.`,
+    specialisation: item.specialisation || "",
+    eligibility: item.eligibility || "",
+    tuitionFeeYearly: item.tuitionFeeYearly ?? item.generalFee ?? null,
+    totalStudentFee: item.totalStudentFee ?? null,
+    source: item.source || "",
+  };
+};
+
+const normalizeProgrammeData = (item) => ({
+  ...item,
+  institutionSlug: item.institutionSlug || "union-college",
+  level: item.level || getLevel(item.title),
+  specialisation: item.specialisation || "",
+});
+
+const buildProgrammeDirectory = () => {
+  const detailedProgrammes = Object.values(universityProgrammes)
+    .flat()
+    .filter(Boolean)
+    .map(normalizeUniversityProgramme);
+
+  const seen = new Set();
+  const combined = [...programmeData.map(normalizeProgrammeData), ...detailedProgrammes];
+
+  return combined.filter((item) => {
+    const key = item.id || `${item.institutionSlug}-${item.title}`;
+
+    if (seen.has(key)) {
+      return false;
+    }
+
+    seen.add(key);
+    return true;
+  });
+};
+
+const programmes = buildProgrammeDirectory();
 
 const Programmes = () => {
   const [search, setSearch] = useState("");
@@ -18,17 +156,56 @@ const Programmes = () => {
   const [institution, setInstitution] = useState("All Institutions");
   const [showFilters, setShowFilters] = useState(false);
 
+  const levels = useMemo(
+    () => [
+      "All Levels",
+      ...Array.from(new Set(programmes.map((item) => item.level).filter(Boolean))).sort(),
+    ],
+    []
+  );
+
+  const faculties = useMemo(
+    () => [
+      "All Faculties",
+      ...Array.from(
+        new Set(programmes.map((item) => item.faculty).filter(Boolean))
+      ).sort(),
+    ],
+    []
+  );
+
+  const institutions = useMemo(
+    () => [
+      "All Institutions",
+      ...Array.from(
+        new Set(programmes.map((item) => item.institution).filter(Boolean))
+      ).sort(),
+    ],
+    []
+  );
+
   const filteredProgrammes = useMemo(() => {
+    const searchValue = search.toLowerCase().trim();
+
     return programmes.filter((programme) => {
-      const searchValue = search.toLowerCase().trim();
+      const searchableText = [
+        programme.title,
+        programme.specialisation,
+        programme.faculty,
+        programme.institution,
+        programme.level,
+        programme.description,
+        programme.eligibility,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
 
       const matchesSearch =
-        !searchValue ||
-        programme.title.toLowerCase().includes(searchValue) ||
-        programme.faculty.toLowerCase().includes(searchValue) ||
-        programme.institution.toLowerCase().includes(searchValue);
+        !searchValue || searchableText.includes(searchValue);
 
-      const matchesLevel = level === "All Levels" || programme.level === level;
+      const matchesLevel =
+        level === "All Levels" || programme.level === level;
 
       const matchesFaculty =
         faculty === "All Faculties" || programme.faculty === faculty;
@@ -38,7 +215,10 @@ const Programmes = () => {
         programme.institution === institution;
 
       return (
-        matchesSearch && matchesLevel && matchesFaculty && matchesInstitution
+        matchesSearch &&
+        matchesLevel &&
+        matchesFaculty &&
+        matchesInstitution
       );
     });
   }, [search, level, faculty, institution]);
@@ -51,42 +231,38 @@ const Programmes = () => {
   };
 
   return (
-    <main className="bg-[#F8F6F1] text-[#082744] min-h-screen">
+    <main className="min-h-screen bg-[#F8F6F1] text-[#082744]">
       {/* =========================================================
           HERO
       ========================================================= */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
-        <div className="absolute top-20 right-[-150px] w-[450px] h-[450px] rounded-full bg-[#B68A3A]/10 blur-3xl" />
+      <section className="relative overflow-hidden pb-20 pt-32">
+        <div className="absolute right-[-150px] top-20 h-[450px] w-[450px] rounded-full bg-[#B68A3A]/10 blur-3xl" />
+        <div className="absolute bottom-[-100px] left-[-150px] h-[400px] w-[400px] rounded-full bg-[#082744]/5 blur-3xl" />
 
-        <div className="absolute bottom-[-100px] left-[-150px] w-[400px] h-[400px] rounded-full bg-[#082744]/5 blur-3xl" />
-
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
             className="max-w-4xl"
           >
-            {/* Label */}
-            <div className="flex items-center gap-3 mb-7">
-              <span className="w-10 h-[1px] bg-[#B68A3A]" />
-
-              <span className="text-xs tracking-[0.25em] uppercase font-semibold text-[#B68A3A]">
+            <div className="mb-7 flex items-center gap-3">
+              <span className="h-[1px] w-10 bg-[#B68A3A]" />
+              <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#B68A3A]">
                 Programme Directory
               </span>
             </div>
 
-            {/* Heading */}
-            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl leading-[0.95] tracking-[-0.03em] mb-8">
+            <h1 className="mb-8 font-serif text-5xl leading-[0.95] tracking-[-0.03em] md:text-6xl lg:text-7xl">
               Explore
               <br />
               <span className="text-[#B68A3A]">Programmes</span>
             </h1>
 
-            {/* Intro */}
-            <p className="text-lg md:text-xl leading-relaxed text-[#082744]/65 max-w-2xl">
-              Browse programmes by academic level, faculty and institution to
-              find options relevant to your goals.
+            <p className="max-w-2xl text-lg leading-relaxed text-[#082744]/65 md:text-xl">
+              Browse courses across Union College and its partner institutions.
+              Search by course name, specialisation, university, faculty or
+              academic level.
             </p>
           </motion.div>
         </div>
@@ -96,122 +272,57 @@ const Programmes = () => {
           SEARCH + FILTERS
       ========================================================= */}
       <section className="pb-12">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="bg-white rounded-3xl border border-[#082744]/5 shadow-[0_15px_50px_rgba(8,39,68,0.06)] p-5 md:p-6">
-            {/* Search */}
-            <div className="flex flex-col lg:flex-row gap-4">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="rounded-3xl border border-[#082744]/5 bg-white p-5 shadow-[0_15px_50px_rgba(8,39,68,0.06)] md:p-6">
+            <div className="flex flex-col gap-4 lg:flex-row">
               <div className="relative flex-1">
                 <Search
                   size={19}
-                  className="
-                    absolute
-                    left-4
-                    top-1/2
-                    -translate-y-1/2
-                    text-[#082744]/35
-                  "
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-[#082744]/35"
                 />
 
                 <input
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search programmes, faculties or institutions..."
-                  className="
-                    w-full
-                    h-14
-                    pl-12
-                    pr-5
-                    rounded-2xl
-                    bg-[#F8F6F1]
-                    border
-                    border-[#082744]/10
-                    outline-none
-                    focus:border-[#B68A3A]
-                    focus:ring-4
-                    focus:ring-[#B68A3A]/10
-                    transition
-                  "
+                  placeholder="Search courses, specialisations, universities..."
+                  className="h-14 w-full rounded-2xl border border-[#082744]/10 bg-[#F8F6F1] pl-12 pr-5 outline-none transition focus:border-[#B68A3A] focus:ring-4 focus:ring-[#B68A3A]/10"
                 />
               </div>
 
-              {/* Mobile filter button */}
               <button
                 type="button"
                 onClick={() => setShowFilters(!showFilters)}
-                className="
-                  lg:hidden
-                  h-14
-                  px-5
-                  rounded-2xl
-                  border
-                  border-[#082744]/10
-                  flex
-                  items-center
-                  justify-center
-                  gap-2
-                  font-semibold
-                "
+                className="flex h-14 items-center justify-center gap-2 rounded-2xl border border-[#082744]/10 px-5 font-semibold lg:hidden"
               >
                 <SlidersHorizontal size={18} />
                 Filters
               </button>
             </div>
 
-            {/* Filters */}
             <div
-              className={`
-                ${showFilters ? "grid" : "hidden"}
-                lg:grid
-                grid-cols-1
-                md:grid-cols-3
-                gap-4
-                mt-4
-              `}
+              className={`${showFilters ? "grid" : "hidden"} mt-4 grid-cols-1 gap-4 md:grid-cols-3 lg:grid`}
             >
-              {/* Level */}
               <FilterSelect
                 value={level}
                 onChange={setLevel}
-                options={["All Levels", "Undergraduate", "Postgraduate"]}
+                options={levels}
               />
 
-              {/* Faculty */}
               <FilterSelect
                 value={faculty}
                 onChange={setFaculty}
-                options={["All Faculties", "Business", "Technology"]}
+                options={faculties}
               />
 
-              {/* Institution */}
               <FilterSelect
                 value={institution}
                 onChange={setInstitution}
-                options={[
-                  "All Institutions",
-                  "Union College",
-                  "Partner Institution",
-                  "Academic Partner",
-                  "Global Institution",
-                ]}
+                options={institutions}
               />
             </div>
 
-            {/* Filter footer */}
-            <div
-              className="
-              flex
-              flex-col
-              sm:flex-row
-              sm:items-center
-              sm:justify-between
-              gap-4
-              mt-5
-              pt-5
-              border-t
-              border-[#082744]/8
-            "
-            >
+            <div className="mt-5 flex flex-col gap-4 border-t border-[#082744]/8 pt-5 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-[#082744]/55">
                 <span className="font-semibold text-[#082744]">
                   {filteredProgrammes.length}
@@ -226,13 +337,7 @@ const Programmes = () => {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="
-                    text-sm
-                    font-semibold
-                    text-[#B68A3A]
-                    hover:text-[#9F752E]
-                    transition
-                  "
+                  className="text-left text-sm font-semibold text-[#B68A3A] transition hover:text-[#9F752E]"
                 >
                   Clear all filters
                 </button>
@@ -246,208 +351,85 @@ const Programmes = () => {
           PROGRAMME RESULTS
       ========================================================= */}
       <section className="pb-28">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
           {filteredProgrammes.length > 0 ? (
-            <div
-              className="
-              grid
-              md:grid-cols-2
-              lg:grid-cols-3
-              gap-7
-            "
-            >
+            <div className="grid gap-7 md:grid-cols-2 lg:grid-cols-3">
               {filteredProgrammes.map((programme, index) => (
                 <motion.article
                   key={programme.id}
-                  initial={{
-                    opacity: 0,
-                    y: 30,
-                  }}
-                  whileInView={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  viewport={{
-                    once: true,
-                    margin: "-50px",
-                  }}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
                   transition={{
                     duration: 0.5,
-                    delay: index * 0.06,
+                    delay: Math.min(index, 8) * 0.04,
                   }}
-                  className="
-                    group
-                    bg-white
-                    rounded-[1.5rem]
-                    overflow-hidden
-                    border
-                    border-[#082744]/5
-                    shadow-[0_10px_40px_rgba(8,39,68,0.05)]
-                    hover:shadow-[0_20px_55px_rgba(8,39,68,0.10)]
-                    hover:-translate-y-1
-                    transition-all
-                    duration-300
-                  "
+                  className="group overflow-hidden rounded-[1.5rem] border border-[#082744]/5 bg-white shadow-[0_10px_40px_rgba(8,39,68,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_55px_rgba(8,39,68,0.10)]"
                 >
-                  {/* Image */}
                   <div className="relative aspect-[16/10] overflow-hidden">
                     <img
-                      src={programme.image}
+                      src={
+                        programme.image ||
+                        (programme.faculty || "")
+                          .toLowerCase()
+                          .includes("technology")
+                          ? FALLBACK_IMAGES.technology
+                          : FALLBACK_IMAGES.default
+                      }
                       alt={programme.title}
-                      className="
-                        w-full
-                        h-full
-                        object-cover
-                        group-hover:scale-105
-                        transition-transform
-                        duration-700
-                      "
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
 
-                    <div
-                      className="
-                      absolute
-                      inset-0
-                      bg-gradient-to-t
-                      from-[#082744]/60
-                      via-transparent
-                      to-transparent
-                    "
-                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#082744]/60 via-transparent to-transparent" />
 
-                    {/* Level badge */}
-                    <div
-                      className="
-                      absolute
-                      top-4
-                      left-4
-                      px-3
-                      py-1.5
-                      rounded-full
-                      bg-white/90
-                      backdrop-blur-sm
-                      text-xs
-                      font-semibold
-                      text-[#082744]
-                    "
-                    >
+                    <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-[#082744] backdrop-blur-sm">
                       {programme.level}
                     </div>
                   </div>
 
-                  {/* Content */}
                   <div className="p-6">
-                    <p
-                      className="
-                      text-xs
-                      uppercase
-                      tracking-[0.15em]
-                      text-[#B68A3A]
-                      font-semibold
-                      mb-3
-                    "
-                    >
+                    <p className="mb-3 text-xs font-semibold uppercase tracking-[0.15em] text-[#B68A3A]">
                       {programme.faculty}
                     </p>
 
-                    <h2
-                      className="
-                      font-serif
-                      text-2xl
-                      leading-tight
-                      mb-3
-                    "
-                    >
+                    <h2 className="mb-3 font-serif text-2xl leading-tight">
                       {programme.title}
                     </h2>
 
-                    <p
-                      className="
-                      text-sm
-                      text-[#082744]/55
-                      leading-relaxed
-                      mb-5
-                    "
-                    >
-                      {programme.description}
-                    </p>
+                    {programme.specialisation && (
+                      <p className="mb-5 line-clamp-3 text-sm leading-relaxed text-[#082744]/55">
+                        {programme.specialisation}
+                      </p>
+                    )}
 
-                    {/* Institution */}
-                    <div
-                      className="
-                      flex
-                      items-center
-                      gap-2
-                      text-sm
-                      text-[#082744]/65
-                      mb-4
-                    "
-                    >
-                      <BookOpen size={16} className="text-[#B68A3A]" />
-
-                      {programme.institution}
+                    <div className="mb-4 flex items-start gap-2 text-sm text-[#082744]/65">
+                      <BookOpen
+                        size={16}
+                        className="mt-0.5 shrink-0 text-[#B68A3A]"
+                      />
+                      <span>{programme.institution}</span>
                     </div>
 
-                    {/* Meta */}
-                    <div
-                      className="
-                      flex
-                      items-center
-                      justify-between
-                      gap-3
-                      py-4
-                      border-y
-                      border-[#082744]/8
-                    "
-                    >
+                    <div className="flex items-center justify-between gap-3 border-y border-[#082744]/8 py-4">
                       <div className="flex items-center gap-2">
                         <Clock3 size={15} className="text-[#B68A3A]" />
-
                         <span className="text-xs text-[#082744]/60">
                           {programme.duration}
                         </span>
                       </div>
 
-                      <span
-                        className="
-                        text-xs
-                        text-[#082744]/50
-                      "
-                      >
+                      <span className="text-right text-xs text-[#082744]/50">
                         {programme.mode}
                       </span>
                     </div>
 
-                    {/* CTA */}
                     <Link
-                      to={`/programmes/${programme.slug}`}
-                      className="
-                        mt-5
-                        flex
-                        items-center
-                        justify-between
-                        w-full
-                        group/button
-                        font-semibold
-                        text-[#082744]
-                      "
+                      to={programme.slug ? `/programmes/${programme.slug}` : "/contact"}
+                      className="group/button mt-5 flex w-full items-center justify-between font-semibold text-[#082744]"
                     >
                       <span>View Programme</span>
 
-                      <span
-                        className="
-                        w-10
-                        h-10
-                        rounded-full
-                        bg-[#082744]
-                        text-white
-                        flex
-                        items-center
-                        justify-center
-                        group-hover/button:bg-[#B68A3A]
-                        transition
-                      "
-                      >
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#082744] text-white transition group-hover/button:bg-[#B68A3A]">
                         <ArrowRight size={17} />
                       </span>
                     </Link>
@@ -456,63 +438,21 @@ const Programmes = () => {
               ))}
             </div>
           ) : (
-            /* =====================================================
-               EMPTY STATE
-            ===================================================== */
-            <div
-              className="
-              bg-white
-              rounded-[2rem]
-              border
-              border-[#082744]/5
-              p-16
-              text-center
-            "
-            >
-              <div
-                className="
-                w-16
-                h-16
-                rounded-full
-                bg-[#B68A3A]/10
-                text-[#B68A3A]
-                flex
-                items-center
-                justify-center
-                mx-auto
-                mb-6
-              "
-              >
+            <div className="rounded-[2rem] border border-[#082744]/5 bg-white p-16 text-center">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#B68A3A]/10 text-[#B68A3A]">
                 <Search size={25} />
               </div>
 
-              <h2 className="font-serif text-3xl mb-3">No programmes found</h2>
+              <h2 className="mb-3 font-serif text-3xl">No programmes found</h2>
 
-              <p
-                className="
-                text-[#082744]/55
-                max-w-md
-                mx-auto
-                mb-7
-              "
-              >
+              <p className="mx-auto mb-7 max-w-md text-[#082744]/55">
                 Try changing your search or filters to explore other programme
                 options.
               </p>
 
               <button
                 onClick={clearFilters}
-                className="
-                  inline-flex
-                  items-center
-                  gap-2
-                  px-6
-                  py-3
-                  rounded-full
-                  bg-[#082744]
-                  text-white
-                  font-semibold
-                "
+                className="inline-flex items-center gap-2 rounded-full bg-[#082744] px-6 py-3 font-semibold text-white"
               >
                 Clear Filters
               </button>
@@ -524,81 +464,35 @@ const Programmes = () => {
       {/* =========================================================
           ADVISOR CTA
       ========================================================= */}
-      <section className="bg-[#082744] text-white py-24">
-        <div className="max-w-5xl mx-auto px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+      <section className="bg-[#082744] py-24 text-white">
+        <div className="mx-auto max-w-5xl px-6 text-center">
+          <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#B68A3A]">
+            Need Guidance?
+          </span>
+
+          <h2 className="mt-5 mb-6 font-serif text-4xl md:text-5xl">
+            Not sure which programme
+            <br />
+            is right for you?
+          </h2>
+
+          <p className="mx-auto mb-9 max-w-xl text-lg text-white/60">
+            Talk to an advisor about your academic interests and explore
+            relevant options.
+          </p>
+
+          <Link
+            to="/contact"
+            className="inline-flex items-center gap-3 rounded-full bg-[#B68A3A] px-8 py-4 font-semibold text-white transition hover:bg-[#9F752E]"
           >
-            <span
-              className="
-              text-xs
-              tracking-[0.25em]
-              uppercase
-              text-[#B68A3A]
-              font-semibold
-            "
-            >
-              Need Guidance?
-            </span>
-
-            <h2
-              className="
-              font-serif
-              text-4xl
-              md:text-5xl
-              mt-5
-              mb-6
-            "
-            >
-              Not sure which programme
-              <br />
-              is right for you?
-            </h2>
-
-            <p
-              className="
-              text-white/60
-              text-lg
-              max-w-xl
-              mx-auto
-              mb-9
-            "
-            >
-              Talk to an advisor about your academic interests and explore
-              relevant options.
-            </p>
-
-            <Link
-              to="/contact"
-              className="
-                inline-flex
-                items-center
-                gap-3
-                bg-[#B68A3A]
-                hover:bg-[#9F752E]
-                text-white
-                px-8
-                py-4
-                rounded-full
-                font-semibold
-                transition
-              "
-            >
-              Talk to an Advisor
-              <ArrowRight size={18} />
-            </Link>
-          </motion.div>
+            Talk to an Advisor
+            <ArrowRight size={18} />
+          </Link>
         </div>
       </section>
     </main>
   );
 };
-
-/* =============================================================
-   FILTER SELECT
-============================================================= */
 
 const FilterSelect = ({ value, onChange, options }) => {
   return (
@@ -606,25 +500,7 @@ const FilterSelect = ({ value, onChange, options }) => {
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="
-          appearance-none
-          w-full
-          h-13
-          px-4
-          pr-11
-          rounded-2xl
-          bg-[#F8F6F1]
-          border
-          border-[#082744]/10
-          text-sm
-          text-[#082744]
-          outline-none
-          focus:border-[#B68A3A]
-          focus:ring-4
-          focus:ring-[#B68A3A]/10
-          transition
-          cursor-pointer
-        "
+        className="h-13 w-full cursor-pointer appearance-none rounded-2xl border border-[#082744]/10 bg-[#F8F6F1] px-4 pr-11 text-sm text-[#082744] outline-none transition focus:border-[#B68A3A] focus:ring-4 focus:ring-[#B68A3A]/10"
       >
         {options.map((option) => (
           <option key={option} value={option}>
@@ -635,14 +511,7 @@ const FilterSelect = ({ value, onChange, options }) => {
 
       <ChevronDown
         size={17}
-        className="
-          pointer-events-none
-          absolute
-          right-4
-          top-1/2
-          -translate-y-1/2
-          text-[#082744]/45
-        "
+        className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#082744]/45"
       />
     </div>
   );
